@@ -1,10 +1,11 @@
 import React from 'react';
 import './Dashboard.css'; // Make sure to import the CSS file
+import EuropeMap from './EuropeMap';
 
 const Dashboard = () => {
     return (
         <div className="dashboard">
-            <div className="map">Map</div>
+            <div className="map"><EuropeMap /></div>
             {/* <div className="empty"></div> */}
             <div className="scatterPlot">Scatter Plot Matrix</div>
             <div className="graph">
