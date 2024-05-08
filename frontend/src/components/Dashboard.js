@@ -1,6 +1,9 @@
 import React from 'react';
 import './Dashboard.css'; // Make sure to import the CSS file
 import EuropeMap from './EuropeMap';
+import * as d3 from 'd3'; // Import the d3 library
+import playerData from "./player_data.csv";
+import RadarPlot from './radarplot';
 
 const Dashboard = () => {
     return (
@@ -20,14 +23,7 @@ const Dashboard = () => {
                 {/* Radar Plot
                 <div className="legend">Legend</div> */}
             </div>
-            <div className="radarPlot">
-                Radar Plot
-                <div>
-                    <dropdown>Players</dropdown>
-                    <button>Select Player</button>
-                </div>
-                <div className="legend">Legend</div>
-            </div>
+            <div className="radarPlot"><RadarPlot /></div>
         </div>
     );
 };

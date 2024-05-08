@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import './EuropeMap.css'; // Assume CSS is extracted to this file
+import geojson from "./europe.geojson";
 
 function EuropeMap() {
     const mapRef = useRef(); // Reference for the main map container
@@ -53,9 +54,7 @@ function EuropeMap() {
             .style("visibility", "hidden");
 
             tooltipLeagueRef.current = tooltipLeague;
-            const geoJsonUrl = "https://gist.githubusercontent.com/spiker830/3eab0cb407031bf9f2286f98b9d0558a/raw/7edae936285e77be675366550e20f9166bed0ed5/europe_features.json";
-      
-            d3.json(geoJsonUrl).then(function(europe) {
+            d3.json(geojson).then(function(europe) {
                 gRef.current.selectAll("path")
                 .data(europe.features)
                 .enter()
