@@ -50,8 +50,28 @@ var radarChartOptions = {
 
 
 function RadarChart(id, data, options) {
-
     console.log(data)
+
+    var newData = [];
+    for (var i = 0; i < data.length; i++) {
+        newData.push([
+            {axis:"Goals",value:parseFloat(data[i]["GoalsPer90s"])},
+            {axis:"Shots",value:parseFloat(data[i]["Shots"])/10},
+            {axis:"Touches",value:parseFloat(data[i]["Touches"])/100},
+            {axis:"Dribbles",value:parseFloat(data[i]["DriSucc"])/10},
+            {axis:"Aerials Won",value:parseFloat(data[i]["AerWon"])},
+            {axis:"Tackles Won",value:parseFloat(data[i]["TklWon"])},
+            {axis:"Defensive Passes",value:parseFloat(data[i]["TB"])},
+            {axis:"Assists",value:parseFloat(data[i]["AssistsPer90"])}
+            // add more key-value pairs as needed
+        ]);
+    }
+
+    console.log("newdata - ",newData);
+    data = newData
+
+
+
     var cfg = {
         w: 400,				//Width of the circle
         h: 400,				//Height of the circle
