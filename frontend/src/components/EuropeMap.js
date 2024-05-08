@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import './EuropeMap.css'; // Assume CSS is extracted to this file
 import geojson from "./europe.geojson";
+import teamwiseData from "./teamwise_data.csv"
 
 function EuropeMap() {
     const mapRef = useRef(); // Reference for the main map container
@@ -32,7 +33,7 @@ function EuropeMap() {
 
         const projection = d3.geoMercator()
             .center([3, 49]) // Adjust as necessary to focus on Western Europe
-            .scale(900)
+            .scale(450)
             .translate([width / 2, height / 2]);
 
         const path = d3.geoPath().projection(projection);
@@ -55,25 +56,33 @@ function EuropeMap() {
 
             tooltipLeagueRef.current = tooltipLeague;
             d3.json(geojson).then(function(europe) {
+                console.log("europe - ", europe.features)
                 gRef.current.selectAll("path")
                 .data(europe.features)
                 .enter()
                 .append("path")
                 .attr("d", path)
-                .style("fill", d => ["Germany", "Spain", "England", "Italy", "France"].includes(d.properties.NAME) ? "red" : "#ccc")
+                .style("fill", function(d){
+                    if(d.properties.name == "Germany" || d.properties.name == "Spain" || d.properties.name == "England" || d.properties.name == "Italy" || d.properties.name == "France"){
+                        return "red";
+                    }
+                    else{
+                        return "#ccc";
+                    }
+                })
                 .style("stroke", "#000")
                 .style("stroke-width", "0.5px")
                 .on("click", clicked)
                 .on("mouseover", (event, d) => {
-                d3.select(event.currentTarget).style("fill", ["Germany", "Spain", "England", "Italy", "France"].includes(d.properties.NAME) ? "orange" : "#ccc");
-                const league = { "Germany": "Bundesliga", "Spain": "La Liga", "England": "Premier League", "Italy": "Serie A", "France": "Ligue 1" }[d.properties.NAME] || "League not in Top 5";
+                d3.select(event.currentTarget).style("fill", ["Germany", "Spain", "England", "Italy", "France"].includes(d.properties.name) ? "orange" : "#ccc");
+                const league = { "Germany": "Bundesliga", "Spain": "La Liga", "England": "Premier League", "Italy": "Serie A", "France": "Ligue 1" }[d.properties.name] || "League not in Top 5";
                 if (tooltipCountryRef.current && tooltipLeagueRef.current) {
-                    tooltipCountryRef.current.text(d.properties.NAME).style("visibility", "visible");
+                    tooltipCountryRef.current.text(d.properties.name).style("visibility", "visible");
                     tooltipLeagueRef.current.text(league).style("visibility", "visible");
                 }
                 })
                 .on("mouseout", (event) => {
-                    d3.select(event.currentTarget).style("fill", d => ["Germany", "Spain", "England", "Italy", "France"].includes(d.properties.NAME) ? "red" : "#ccc");
+                    d3.select(event.currentTarget).style("fill", d => ["Germany", "Spain", "England", "Italy", "France"].includes(d.properties.name) ? "red" : "#ccc");
                     if (tooltipCountryRef.current && tooltipLeagueRef.current) {
                         tooltipCountryRef.current.style("visibility", "hidden");
                         tooltipLeagueRef.current.style("visibility", "hidden");
@@ -102,12 +111,12 @@ function EuropeMap() {
             gRef.current.transition()
                 .duration(750)
                 .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
-            console.log(d.properties.NAME.toUpperCase())
-            showcities(d.properties.NAME.toUpperCase());
+            console.log(d.properties.name.toUpperCase())
+            showcities(d.properties.name.toUpperCase());
         }
         
         function showcities(Country) {
-            d3.csv("teamwise_data.csv").then(function(data) {
+            d3.csv(teamwiseData).then(function(data) {
                 g.selectAll("circle")
                     .data(data.filter(function(d) {
                         return d.Country === Country;
