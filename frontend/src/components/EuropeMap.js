@@ -10,8 +10,8 @@ function EuropeMap() {
     const tooltipLeagueRef = useRef(null);
 
     useEffect(() => {
-        const width = 600;
-        const height = 600;
+        const width = 300;
+        const height = 300;
 
         const svg = d3.select(mapRef.current)
             .append("svg")
@@ -154,18 +154,11 @@ function EuropeMap() {
         }
     };
 
-    
-
-  
-
-   
-
     return (
         <div>
-            <div ref={mapRef} id="map" style={{ width: '600px', height: '600px', margin: '0 auto', border: '1px solid #aaa' }}></div>
+            <div ref={mapRef} id="map"></div>
             <button
                 id="resetButton"
-                style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 10, padding: '10px', backgroundColor: 'white', border: '1px solid #ccc', cursor: 'pointer' }}
                 onClick={zoomToEurope}
             >
                 Back to Europe

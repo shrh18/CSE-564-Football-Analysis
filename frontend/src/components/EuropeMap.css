@@ -7,3 +7,21 @@
 .country.active {
     fill: orange;
 }
+
+.map{
+    width: '600px';
+    height: '600px';
+    margin: '0 auto';
+    border: '1px solid #aaa';
+}
+
+.resetButton{
+    position: 'absolute';
+    top: '20px';
+    right: '20px';
+    z-index: 10;
+    padding: '10px';
+    background-color: 'white';
+    border: '1px solid #ccc'; 
+    cursor: 'pointer';
+}

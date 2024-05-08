@@ -22,6 +22,10 @@ const Dashboard = () => {
             </div>
             <div className="radarPlot">
                 Radar Plot
+                <div>
+                    <dropdown>Players</dropdown>
+                    <button>Select Player</button>
+                </div>
                 <div className="legend">Legend</div>
             </div>
         </div>
