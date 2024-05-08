@@ -1,0 +1,57 @@
+.dashboard {
+    display: grid;
+    grid-template-columns: 3fr 2fr 3fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-areas:
+        "map scatterPlot scatterPlot"
+        "graph scatterPlot scatterPlot"
+        "parallelCoordinatesPlot parallelCoordinatesPlot radarPlot";
+    height: 100vh; /* Adjust height as needed */
+    grid-gap: 10px; /* Space between grid cells */
+}
+
+.map {
+    grid-area: map;
+    background-color: #f0f0f0; /* Just for visibility */
+}
+
+.parallelCoordinatesPlot {
+    /* grid-area: empty; */
+    grid-area: parallelCoordinatesPlot;
+    background-color: #f0e0d0;
+    /* intentionally left blank */
+}
+
+.scatterPlot {
+    grid-area: scatterPlot;
+    background-color: #d0e0f0; /* Just for visibility */
+}
+
+.graph {
+    grid-area: graph;
+    background-color: #f0e0d0; /* Just for visibility */
+    display: flex;
+    flex-direction: column;
+}
+
+.tabs button {
+    margin-right: 10px;
+}
+
+.graphContent {
+    flex-grow: 1;
+}
+
+.radarPlot {
+    grid-area: radarPlot;
+    background-color: #c0d0e0; /* Just for visibility */
+    position: relative;
+}
+
+.legend {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: #fff;
+    padding: 5px;
+}
