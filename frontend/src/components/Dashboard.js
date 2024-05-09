@@ -2,9 +2,8 @@ import React from 'react';
 import './Dashboard.css'; // Make sure to import the CSS file
 import EuropeMap from './EuropeMap';
 import * as d3 from 'd3'; // Import the d3 library
-import playerData from "./player_data.csv";
 import RadarPlot from './radarplot';
-import Barplot from './Barplot.js'
+import ScatterPlotMatrix from './ScatterplotMatrix';
 
 const Dashboard = () => {
     return (
@@ -13,7 +12,13 @@ const Dashboard = () => {
             {/* <div className="empty"></div> */}
             <div className="scatterPlot">Scatter Plot Matrix</div>
             <div className="graph">
-                <Barplot />
+                <div className="tabs">
+                    <button>Tab 1</button>
+                    <button>Tab 2</button>
+                    <button>Tab 3</button>
+                </div>
+                <ScatterPlotMatrix />
+                <div className="graphContent">Graph Area</div>
             </div>
             <div className="parallelCoordinatesPlot">
                 {/* Radar Plot
