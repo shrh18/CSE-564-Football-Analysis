@@ -13,6 +13,8 @@ function EuropeMap(props) {
     const tooltipCountryRef = useRef(null);
     const tooltipLeagueRef = useRef(null);
 
+    let CountrySelected = props?.CountrySelected;
+
 
     useEffect(() => {
         const width = 300;
@@ -122,6 +124,8 @@ function EuropeMap(props) {
         }
         
         function showcities(Country) {
+            console.log("Country &&",Country);
+            console.log("teamwiseData &&",teamwiseData);
             d3.csv(teamwiseData).then(function(data) {
                 g.selectAll("circle").remove();
                 g.selectAll("circle")
@@ -151,14 +155,8 @@ function EuropeMap(props) {
                         tooltipCountry.style("visibility", "hidden");
                         tooltipLeague.style("visibility", "hidden");
                     });
-            });
-
-            
-        
+                });
         }
-        
-        
-        
     }, []);
 
     const zoomToEurope = () => {
@@ -186,92 +184,3 @@ function EuropeMap(props) {
 }
 
 export default EuropeMap;
-
-// import React, { useEffect, useState } from 'react';
-// import * as d3 from 'd3';
-
-// function EuropeMap() {
-//   const [geoJsonData, setGeoJsonData] = useState(null); // State to hold the loaded GeoJSON data
-
-//   useEffect(() => {
-//     // Function to load GeoJSON data
-//     const loadGeoJson = () => {
-//       d3.json("europe.geojson")
-//         .then(data => {
-//           console.log(data); // Log data to console
-//           setGeoJsonData(data); // Store the loaded GeoJSON data in state
-//         })
-//         .catch(error => console.error('Could not load the GeoJSON file:', error));
-//     };
-
-//     loadGeoJson(); // Call the function to load GeoJSON data
-//   }, []); // Empty dependency array ensures this effect runs only once after the component mounts
-
-//   return (
-//     <div>
-//       {geoJsonData ? (
-//         <div>
-//           {/* Render your map or data visualization component here */}
-//           <p>GeoJSON Data Loaded. Check console for details.</p>
-//         </div>
-//       ) : (
-//         <p>Loading map data...</p> // Display while data is loading
-//       )}
-//     </div>
-//   );
-// }
-
-// export default EuropeMap;
-
-// import React, { useEffect, useState } from 'react';
-// import * as d3 from 'd3';
-
-// const EuropeMap = () => {
-//   const [usa, setUsa] = useState(true);
-
-//   useEffect(() => {
-//     const width = 500, height = 300;
-
-//     // Clear existing SVG to prevent duplication
-//     d3.select('#map-container').selectAll("*").remove();
-
-//     const svg = d3.select('#map-container').append('svg')
-//       .attr('width', width)
-//       .attr('height', height);
-
-//     const usaProjection = d3.geoAlbersUsa()
-//       .scale(600)
-//       .translate([250, 150]);
-//     const europeProjection = d3.geoMercator()
-//       .center([13, 52])
-//       .scale(width / 1.5)
-//       .translate([width / 2, height / 2]);
-
-//     const pathGenerator = d3.geoPath().projection(usa ? usaProjection : europeProjection);
-//     const geoJsonUrl = usa 
-//       ? "https://gist.githubusercontent.com/spiker830/e0d1b7950ced31369c903bed0cead7b1/raw/702c72e0ca5a1be95f84a50a58cfa6d4d6400f3f/us_features.json"
-//       : "https://gist.githubusercontent.com/spiker830/3eab0cb407031bf9f2286f98b9d0558a/raw/7edae936285e77be675366550e20f9166bed0ed5/europe_features.json";
-
-//     d3.json(geoJsonUrl).then(geojson => {
-//       svg.selectAll("path")
-//         .data(geojson.features)
-//         .enter()
-//         .append("path")
-//         .attr("d", pathGenerator)
-//         .attr("stroke", "grey")
-//         .attr("fill", "white");
-//     });
-//   }, [usa]); // Re-run the effect when 'usa' changes
-
-//   return (
-//     <div>
-//       <div id="map-container"></div>
-//       <button onClick={() => setUsa(!usa)}>
-//         Switch to {usa ? 'Europe' : 'USA'}
-//       </button>
-//     </div>
-//   );
-// };
-
-// export default EuropeMap;
-

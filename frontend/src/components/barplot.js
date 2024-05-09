@@ -58,6 +58,7 @@ function Barplot(props) {
             try {
                 extractedData = await dataExtraction();
                 console.log('Extracted data:', extractedData);
+                props.setPlotData(extractedData)
                 // Process the extracted data here
             } catch (error) {
                 console.error('Error extracting data:', error);

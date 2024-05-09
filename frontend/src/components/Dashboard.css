@@ -1,10 +1,10 @@
 .dashboard {
     display: grid;
-    grid-template-columns: 3fr 2fr 3fr;
+    grid-template-columns: 2fr 3fr 3fr;
     grid-template-rows: 1fr 1fr 1fr;
     grid-template-areas:
-        "map scatterPlot scatterPlot"
-        "graph scatterPlot scatterPlot"
+        "map scatterPlot radarPlot"
+        "graph scatterPlot radarPlot"
         "parallelCoordinatesPlot parallelCoordinatesPlot radarPlot";
     height: 100vh; /* Adjust height as needed */
     grid-gap: 10px; /* Space between grid cells */
@@ -46,6 +46,7 @@
     grid-area: radarPlot;
     background-color: #d5e8f3; /* Just for visibility */
     position: relative;
+    padding: 10px;
 }
 
 .legend {

@@ -19,29 +19,29 @@ const ScatterPlotMatrix = (props) => {
         let extractedData = null;
 
 
-        async function extractData() {
-            let info;
-            try {
-                info = await dataExtraction();
-                // console.log('Extracted data && :', extractedData);
-                // let data= JSON.parse(extractedData);
-                setData(info)
-                console.log('Extracted data && 2 :',data)
-                // Process the extracted data here
-            } catch (error) {
-                console.error('Error extracting data && :', error);
-            }
+        // async function extractData() {
+        //     let info;
+        //     try {
+        //         info = await dataExtraction();
+        //         // console.log('Extracted data && :', extractedData);
+        //         // let data= JSON.parse(extractedData);
+        //         setData(info)
+        //         console.log('Extracted data && 2 :',data)
+        //         // Process the extracted data here
+        //     } catch (error) {
+        //         console.error('Error extracting data && :', error);
+        //     }
         
-            return info;
-        }
-        extractData();
-        extractedData = data;
+        //     return info;
+        // }
+        // extractData();
+        extractedData = props?.plotData;
 
         console.log("Extracted data  && wefnwefheiwhfi:", extractedData);
         console.log("data 123 &&",data);
         // drawScatterPlotMatrix(data);
 
-        if(data != null){
+        if(props.plotData != null){
 
         let team, goals,fouls,passes, selectedLeagueKeys, mapdata;
         // let league;
@@ -140,8 +140,11 @@ const ScatterPlotMatrix = (props) => {
         
 
         console.log("mapdata: ", mapdata)
-        if( typeof map !== "undefined")
+        if( typeof map !== "undefined"){
+            // d3.select("#scatterPlotDiv").remove();
             drawScatterPlotMatrix(mapdata);
+        }
+            
         // let { allTeamsStats } = data;
         // console.log("allTeamsStats &&", allTeamsStats);
         // allTeamsStats?.forEach((league) => {
@@ -149,7 +152,7 @@ const ScatterPlotMatrix = (props) => {
         // })
     }
 
-    }, [props.CountrySelected]);
+    }, [props.plotData]);
 
     
 
@@ -166,7 +169,10 @@ const ScatterPlotMatrix = (props) => {
             columns.forEach(function(trait) {
                 domainByTrait[trait] = d3.extent(data, function(d) { return +d[trait]; });
             });
-
+            
+            // d3.select("#scatterPlotDiv").append("div").attr("id", "scatterPlotDiv")
+            // const svg = d3.select("#scatterPlotDiv")
+            d3.select("#scatterplotSvg").selectAll('svg').remove();
             const svg = d3.select(scatterRef.current)
                 .attr('width', size * columns.length + padding)
                 .attr('height', size * columns.length + padding)
@@ -254,8 +260,9 @@ const ScatterPlotMatrix = (props) => {
 
 
     return (
-        <div >
+        <div>
             <h2><u>ScatterPlot Matrix</u></h2>
+
             <svg ref={scatterRef}></svg>
         </div>
     );
