@@ -2,7 +2,14 @@ import React, { useEffect, useState }  from 'react';
 import * as d3 from 'd3'; // Import the d3 library
 import playerData from "./player_data.csv";
 import "./radarplot.css";
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 // import "./radarChart";
+// import React, { useState, useEffect } from 'react';
+import Papa from 'papaparse';
+import Box from '@mui/material/Box';
+import { Button } from '@mui/material';
+
 
 
 var margin = {top: 100, right: 100, bottom: 100, left: 100},
@@ -10,50 +17,10 @@ var margin = {top: 100, right: 100, bottom: 100, left: 100},
 				height = Math.min(width, window.innerHeight - margin.top - margin.bottom - 20);
 					
 
-var data = [
-            [//iPhone
-            {axis:"Battery Life",value:0.22},
-            {axis:"Brand",value:0.28},
-            {axis:"Contract Cost",value:0.29},
-            {axis:"Design And Quality",value:0.17},
-            {axis:"Have Internet Connectivity",value:0.22},
-            {axis:"Large Screen",value:0.02},
-            {axis:"Price Of Device",value:0.21},
-            {axis:"To Be A Smartphone",value:0.50}			
-            ],[//Samsung
-            {axis:"Battery Life",value:0.27},
-            {axis:"Brand",value:0.16},
-            {axis:"Contract Cost",value:0.35},
-            {axis:"Design And Quality",value:0.13},
-            {axis:"Have Internet Connectivity",value:0.20},
-            {axis:"Large Screen",value:0.13},
-            {axis:"Price Of Device",value:0.35},
-            {axis:"To Be A Smartphone",value:0.38}
-            ],[//Nokia Smartphone
-            {axis:"Battery Life",value:0.26},
-            {axis:"Brand",value:0.10},
-            {axis:"Contract Cost",value:0.30},
-            {axis:"Design And Quality",value:0.14},
-            {axis:"Have Internet Connectivity",value:0.22},
-            {axis:"Large Screen",value:0.04},
-            {axis:"Price Of Device",value:0.41},
-            {axis:"To Be A Smartphone",value:0.30}
-            ]
-        ];
 
 var color = d3.scaleOrdinal()
     .range(["#EDC951","#CC333F","#00A0B0"]);
     
-var radarChartOptions = {
-    w: width,
-    h: height,
-    margin: margin,
-    maxValue: 0.5,
-    levels: 5,
-    roundStrokes: true,
-    color: color
-};
-
 
 
 function RadarChart(id, data, options) {
@@ -346,70 +313,19 @@ function RadarChart(id, data, options) {
 
 function RadarPlot() {
 
-    d3.csv(playerData).then(function(data) {
-        // Get the column values
-        var columnData = data.map(function(d) {
-            return d.Player;
-        });
-        // console.log(data)
+    const [players, setPlayers] = useState([]);
+    const [selectedPlayer1, setSelectedPlayer1] = useState(null); 
 
-        // Populate the dropdown options
-        var dropdown = document.getElementById("dropdown");
-        dropdown.innerHTML = ""; // Clear existing options
-        columnData.forEach(function(value) {
-            var option = document.createElement("option");
-            option.text = value;
-            dropdown.add(option);
-        });
-    });
+    const [selectedPlayer2, setSelectedPlayer2] = useState(null); 
 
-    function filterDropdownOptions() {
-        var searchInput = document.getElementById("searchInput");
-        var filter = searchInput.value.toLowerCase();
-        var options = document.getElementById("dropdown").options;
-
-        for (var i = 0; i < options.length; i++) {
-            var option = options[i];
-            var text = option.text.toLowerCase();
-            if (text.includes(filter)) {
-                option.style.display = "";
-            } else {
-                option.style.display = "none";
-            }
-        }
-    }
-    // Select player from dropdown and add to text field
-    function selectPlayer() {
-       
-        var dropdown = document.getElementById("dropdown");
-        var selectedPlayers = document.getElementById("selectedPlayers");
-        for (var i = 0; i < dropdown.options.length; i++) {
-            var option = dropdown.options[i];
-            if (option.selected) {
-                var player = document.createElement("div");
-                player.textContent = option.text;
-                selectedPlayers.appendChild(player);
-            }
-        }
-    }
-    
-    function checkDuplicates() {
-        var selectedPlayers = document.getElementById("selectedPlayers");
-        var players = selectedPlayers.getElementsByTagName("div");
-        var playerNames = [];
-        for (var i = 0; i < players.length; i++) {
-            playerNames.push(players[i].textContent);
-        }
-        return playerNames;
-    }
 
     
     // Compare selected players on radarplot
     const [playerDataVar, setPlayerData] = useState([]);
 
     function comparePlayer() {
-        var playerNames = checkDuplicates();
-        console.log(playerNames)
+        var playerNames = [selectedPlayer1.label,selectedPlayer2.label];
+        console.log("player Nmaes &&",playerNames)
         if (playerNames.length > 1) {
             var radarData = [];
             d3.csv(playerData).then(function(data) {
@@ -423,8 +339,6 @@ function RadarPlot() {
                 setPlayerData(radarData);
                 // RadarChart(".radarChart", radarData, radarChartOptions);
             });
-        } else {
-            alert("Please select at least two players to compare.");
         }
     }
     console.log("paydafra - ", playerDataVar)
@@ -447,34 +361,69 @@ function RadarPlot() {
         // RadarChart(".radarChart", playerDataVar, radarChartOptions);
     },[playerDataVar])
 
+
+    useEffect(() => {
+        // Load and parse the CSV data
+        Papa.parse(playerData, {
+          download: true,
+          header: true,
+          complete: function(results) {
+            const data = results.data;
+            // Transform the data into the required format for the component
+            const transformedData = data.map(player => ({
+              label: player.Player,
+              Squad: player.Squad // Assuming there's a 'Year' column in your CSV
+            }));
+            setPlayers(transformedData);
+            console.log("Data from CSV - ", typeof transformedData);
+          }
+        });
+      }, [playerData]);
+
+      console.log("player && ",players);
+      const filteredPlayers1 = players.filter(player => player.label !== selectedPlayer2?.label);
+      const filteredPlayers2 = players.filter(player => player.label !== selectedPlayer1?.label);
+    
+
     return (
         <div>
             <div className="radarPlot">
                 Radar Plot
+                <Box display="flex" justifyContent="space-around" p={1} m={1}>
+                <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    options={filteredPlayers1}
+                    getOptionLabel={(option) => option.label}
+                    sx={{ width: 200 }}
+                    renderInput={(params) => <TextField {...params} label="Choose 1st player" />}
+                    value={selectedPlayer1}
+                    onChange={(event, newValue) => {
+                    setSelectedPlayer1(newValue);
+                    }}
+                    />
+
+                <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    options={filteredPlayers2}
+                    getOptionLabel={(option) => option.label}
+                    sx={{ width: 200 }}
+                    renderInput={(params) => <TextField {...params} label="Choose 2nd player" />}
+                    value={selectedPlayer2}
+                    onChange={(event, newValue) => {
+                    setSelectedPlayer2(newValue);
+                    }}
+                    />
+                    </Box>
                 <div>
                     <div>
-                        <div>
-                            <input type="text" id="searchInput" placeholder="Search..." onChange={filterDropdownOptions}></input>
-                            <select id="dropdown" multiple>
-                                <option value="">Select an option</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div>
-                        <div id="selectedPlayersTitle">Selected Players:</div>
-                        <div id="selectedPlayers"></div>
-                    </div>
-                    <div>
-                        <button onClick={selectPlayer}>Select Player</button>
-                    </div>
-                    <div>
-                        <button onClick={comparePlayer}>Compare Players</button>
+                        <Button onClick={comparePlayer} variant="outlined">Compare Players</Button>
                     </div>
 
                     <div className='radarChart'></div>
 
                 </div>
-                <div className="legend">Legend</div>
             </div>
         </div>
     );
