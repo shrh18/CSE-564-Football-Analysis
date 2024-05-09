@@ -5,6 +5,7 @@ import teamwiseData from "./teamwise_data.csv";
 import dataExtraction from "./dataFeaturing.js";
 // import dataExtraction from './dataFeaturing.js';
 import EuropeMap from './EuropeMap.js';
+import { Button, Box } from '@mui/material';
 
 
 function Barplot(props) {
@@ -17,7 +18,7 @@ function Barplot(props) {
 
 
     useEffect(() => {
-        updateChart("Goals");
+        // updateChart("Goals");
         
         console.log("Chart 2",chart);
         if( chart != ""){
@@ -26,7 +27,7 @@ function Barplot(props) {
         height = 300 - margin.top - margin.bottom;
 
         // append the svg object to the body of the page
-        
+        d3.select("#barPlotChartDiv").remove();
         var xx = d3.select('#barplot').append("div").attr("id", "barPlotChartDiv")
         var svg = d3.select("#barPlotChartDiv")
         .append("svg")
@@ -168,7 +169,8 @@ function Barplot(props) {
 
         // // Initialize plot
         update(chart)
-    }else{
+    }
+    else{
         updateChart("Goals");
         
 
@@ -190,9 +192,11 @@ function Barplot(props) {
         <div>
             <div id="barplot"></div>
             <p>Country Selected: {country}</p>
-            <button onClick={() => updateChart("Goals")}>Goals</button>
-            <button onClick={() => updateChart('Fouls')}>Fouls</button>
-            <button onClick={() => updateChart('Passes')}>Passes</button>
+            <Box display="flex" justifyContent="space-around" p={1} m={1}>
+                <Button onClick={() => updateChart("Goals")} variant="outlined"> Goals </Button>
+                <Button onClick={() => updateChart("Fouls")} variant="outlined"> Fouls </Button>
+                <Button onClick={() => updateChart("Passes")} variant="outlined"> Passes </Button>
+            </Box>
         </div>
     );
 }

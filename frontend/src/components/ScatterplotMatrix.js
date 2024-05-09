@@ -6,190 +6,47 @@ import dataExtraction from './dataFeaturing';
 const ScatterPlotMatrix = (props) => {
 
     const scatterRef = useRef(null);
-    let country = props.CountrySelected;
-    const width = 800;
+    // let country = props.CountrySelected;
+    const width = 600;
     const size = 200; // Size of each mini plot
     const padding = 20; // Padding between plots
     const colormap = ["red", "blue", "green"];
 
-    const [data,setData] = useState(null);
+    // const [data,setData] = useState(null);
 
-    useEffect(() =>{
-
-        let extractedData = null;
-
-
-        // async function extractData() {
-        //     let info;
-        //     try {
-        //         info = await dataExtraction();
-        //         // console.log('Extracted data && :', extractedData);
-        //         // let data= JSON.parse(extractedData);
-        //         setData(info)
-        //         console.log('Extracted data && 2 :',data)
-        //         // Process the extracted data here
-        //     } catch (error) {
-        //         console.error('Error extracting data && :', error);
-        //     }
-        
-        //     return info;
-        // }
-        // extractData();
-        extractedData = props?.plotData;
-
-        console.log("Extracted data  && wefnwefheiwhfi:", extractedData);
-        console.log("data 123 &&",data);
-        // drawScatterPlotMatrix(data);
-
-        if(props.plotData != null){
-
-        let team, goals,fouls,passes, selectedLeagueKeys, mapdata;
-        // let league;
-
-        if(country == "Europe"){
-            let league = extractedData.leagues
-            // goals = [extractedData.sumGoalsPremierLeague, extractedData.sumGoalsLigue1, extractedData.sumGoalsBundesliga, extractedData.sumGoalsSerieA, extractedData.sumGoalsLaLiga] 
-            // fouls = [extractedData.sumFoulsPremierLeague, extractedData.sumFoulsLigue1, extractedData.sumFoulsBundesliga, extractedData.sumFoulsSerieA, extractedData.sumFoulsLaLiga]
-            // passes = [extractedData.sumPassesPremierLeague/1000, extractedData.sumPassesLigue1/1000, extractedData.sumPassesBundesliga/1000, extractedData.sumPassesSerieA/1000, extractedData.sumPassesLaLiga/1000]
-
-
-            let allTeamsStats = extractedData.allTeamsStats;
-            console.log("allTeamsStats - ", allTeamsStats)
-            let allGoals = [];
-            let allFouls = [];
-            let allPasses = [];
-
-            mapdata = [];
-            if (allTeamsStats) {
-                allTeamsStats.forEach(league => {
-                    // console.log(league)
-                    Object.values(league).forEach(teams => {
-                        Object.entries(teams).forEach(team =>{
-                            console.log(team)
-                            mapdata.push({
-                                teamName: team[0],
-                                fouls: team[1]['fouls'],
-                                passes: team[1]['sucPass'],
-                                goals: team[1]['goals']
-                            });
-                        })
-                        
-                    });
-                   
-                });
-            }
-
-
-            goals = allGoals;
-            fouls = allFouls;
-            passes = allPasses;
-            
-
-            // extractedData.leagues.forEach(league => {
-            //     allTeamsStats.league.forEach(team => {
-            //         mapdata.push({
-            //             teamName: team.name,
-            //             fouls: team.fouls,
-            //             passes: team.passes,
-            //             goals: team.goals
-            //         });
-            //     });
-            // });
-
-        }
-        else{
-            
-            let league;
-            if(country == 'Germany'){
-                league = 'Bundesliga'
-            }
-            else if(country == 'England'){
-                league = 'Premier League'
-            }
-            else if(country == 'Spain'){
-                league = 'La Liga'
-            }
-            else if(country == 'Italy'){
-                league = 'Serie A'
-            }
-            else if(country == 'France'){
-                league = 'Ligue 1'
-            }
-
-            let selectedLeagueStats = extractedData.allTeamsStats.find(obj => league in obj)[league];
-            console.log("selectedLeagueStats : ", selectedLeagueStats)
-
-            // Extract goals for each team in the selected league
-            goals = Object.values(selectedLeagueStats).map(team => team.goals);
-            console.log("selectedLeagueGoals",goals);
-
-            let selectedLeagueAges = Object.values(selectedLeagueStats).map(team => team.avgAge);
-            passes = Object.values(selectedLeagueStats).map(team => team.sucPass);
-            fouls = Object.values(selectedLeagueStats).map(team => team.fouls);
-
-            selectedLeagueKeys = Object.keys(selectedLeagueStats);
-            mapdata = selectedLeagueKeys?.map((name, index) => ({
-                teamName: name,
-                fouls: fouls[index],
-                passes: passes[index],
-                goals: goals[index]
-            }));
-
-
-        }
-        
-
-        console.log("mapdata: ", mapdata)
-        if( typeof map !== "undefined"){
-            // d3.select("#scatterPlotDiv").remove();
-            drawScatterPlotMatrix(mapdata);
-        }
-            
-        // let { allTeamsStats } = data;
-        // console.log("allTeamsStats &&", allTeamsStats);
-        // allTeamsStats?.forEach((league) => {
-        //     console.log(league);
-        // })
-    }
-
-    }, [props.plotData]);
-
-    
-
-    function drawScatterPlotMatrix(data){
-       
-
+    function drawScatterPlotMatrix(data) {
         // Extract the columns from data which are specified in the task
-        if(data != null){
-
+        if (data != null) {
             console.log("data is not null - ", data)
             const columns = ["goals", "fouls", "passes"]; // Example columns
             const domainByTrait = {};
             const width = size * columns.length + padding;
             const height = size * columns.length + padding;
-
-            columns.forEach(function(trait) {
-                domainByTrait[trait] = d3.extent(data, function(d) { return +d[trait]; });
+    
+            columns.forEach(function (trait) {
+                domainByTrait[trait] = d3.extent(data, function (d) { return +d[trait]; });
             });
-            
-            // d3.select("#scatterPlotDiv").append("div").attr("id", "scatterPlotDiv")
-            // const svg = d3.select("#scatterPlotDiv")
-            d3.select("#scatterplotSvg").selectAll('svg').remove();
+    
+            d3.select("#scatterPlotChartDiv").remove(); // Remove existing chart
+    
             const svg = d3.select(scatterRef.current)
                 .attr('width', size * columns.length + padding)
                 .attr('height', size * columns.length + padding)
                 .append('g')
+                .attr('id', 'scatterPlotChartDiv') // Add an id to the container for easy removal
                 .attr('transform', 'translate(' + padding + ',' + padding / 2 + ')');
-
+    
             const xScale = d3.scaleLinear()
                 .range([padding / .5, size - padding / 0.5]);
-
+    
             const yScale = d3.scaleLinear()
                 .range([size - padding / .5, padding / .5]);
-
+    
             const xAxis = d3.axisBottom(xScale).ticks(10);
             const yAxis = d3.axisLeft(yScale).ticks(10);
-
+    
+            svg.selectAll(".cell").remove(); // Remove existing cells
+    
             columns.forEach((xTrait, i) => {
                 columns.forEach((yTrait, j) => {
                     const cell = svg.append("g")
@@ -198,14 +55,14 @@ const ScatterPlotMatrix = (props) => {
     
                     xScale.domain(domainByTrait[xTrait]);
                     yScale.domain(domainByTrait[yTrait]);
-
+    
                     cell.append("rect")
-                    .attr("class", "frame")
-                    .attr("x", padding / 2)
-                    .attr("y", padding / 2)
-                    .attr("width", size - padding)
-                    .attr("height", size - padding)
-                    .style("fill", "lightblue");
+                        .attr("class", "frame")
+                        .attr("x", padding / 2)
+                        .attr("y", padding / 2)
+                        .attr("width", size - padding)
+                        .attr("height", size - padding)
+                        .style("fill", "lightblue");
     
                     if (i === j) {
                         cell.append("text")
@@ -242,16 +99,126 @@ const ScatterPlotMatrix = (props) => {
                 });
             });
         }
+    }
+    
+
+    useEffect(() =>{
+
+        // let extractedData = null;
+
+        // extractedData = props?.plotData;
+
+        // console.log("Extracted data  && wefnwefheiwhfi:", extractedData);
+        // console.log("data 123 &&",data);
+        // drawScatterPlotMatrix(data);
+
+        if(props.plotData != null && props.CountrySelected !== ""){
+
+        let team, goals,fouls,passes, selectedLeagueKeys, mapdata;
+        // let league;
+
+        if(props.CountrySelected === "Europe"){
+            // let league = props?.plotData?.leagues
+            let allTeamsStats = props?.plotData?.allTeamsStats;
+            console.log("allTeamsStats - ", allTeamsStats)
+            let allGoals = [];
+            let allFouls = [];
+            let allPasses = [];
+
+            mapdata = [];
+            if (allTeamsStats) {
+                allTeamsStats.forEach(league => {
+                    // console.log(league)
+                    Object.values(league).forEach(teams => {
+                        Object.entries(teams).forEach(team =>{
+                            // console.log(team)
+                            mapdata.push({
+                                teamName: team[0],
+                                fouls: team[1]['fouls'],
+                                passes: team[1]['sucPass'],
+                                goals: team[1]['goals']
+                            });
+                        })
+                        
+                    });
+                   
+                });
+            }
+
+
+            goals = allGoals;
+            fouls = allFouls;
+            passes = allPasses;
+        }
+        else{
+            
+            let league;
+            if(props.CountrySelected === 'Germany'){
+                league = 'Bundesliga'
+            }
+            else if(props.CountrySelected === 'England'){
+                league = 'Premier League'
+            }
+            else if(props.CountrySelected === 'Spain'){
+                league = 'La Liga'
+            }
+            else if(props.CountrySelected === 'Italy'){
+                league = 'Serie A'
+            }
+            else if(props.CountrySelected === 'France'){
+                league = 'Ligue 1'
+            }
+
+            let selectedLeagueStats = props?.plotData?.allTeamsStats.find(obj => league in obj)[league];
+            console.log("selectedLeagueStats : ", selectedLeagueStats)
+
+            // Extract goals for each team in the selected league
+            goals = Object.values(selectedLeagueStats).map(team => team.goals);
+            console.log("selectedLeagueGoals",goals);
+
+            let selectedLeagueAges = Object.values(selectedLeagueStats).map(team => team.avgAge);
+            passes = Object.values(selectedLeagueStats).map(team => team.sucPass);
+            fouls = Object.values(selectedLeagueStats).map(team => team.fouls);
+
+            selectedLeagueKeys = Object.keys(selectedLeagueStats);
+            mapdata = selectedLeagueKeys?.map((name, index) => ({
+                teamName: name,
+                fouls: fouls[index],
+                passes: passes[index],
+                goals: goals[index]
+            }));
+
+
+        }
         
-    };
+
+        console.log("mapdata: ", mapdata)
+        if( typeof map !== "undefined"){
+            d3.select("scatterRef").remove();
+            drawScatterPlotMatrix(mapdata);
+        }
+            
+        // let { allTeamsStats } = data;
+        // console.log("allTeamsStats &&", allTeamsStats);
+        // allTeamsStats?.forEach((league) => {
+        //     console.log(league);
+        // })
+    }
+
+    }, [props.plotData]);
+
+    
 
 
 
     return (
         <div>
             <h2><u>ScatterPlot Matrix</u></h2>
+            <div id="scatterPlotDiv"></div>
+            <div style={{padding: "0px 20px"}}>    
+            <svg ref={scatterRef}></svg></div>
 
-            <svg ref={scatterRef}></svg>
+        
         </div>
     );
 };

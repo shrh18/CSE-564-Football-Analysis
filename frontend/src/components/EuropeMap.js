@@ -2,7 +2,9 @@ import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import './EuropeMap.css'; // Assume CSS is extracted to this file
 import geojson from "./europe.geojson";
-import teamwiseData from "./teamwise_data.csv"
+import teamwiseData from "./teamwise_data.csv";
+import { Button } from '@mui/material';
+import Box from '@mui/material/Box';
 
 let CountrySelected = null
 
@@ -17,7 +19,7 @@ function EuropeMap(props) {
 
 
     useEffect(() => {
-        const width = 300;
+        const width = 400;
         const height = 300;
 
         const svg = d3.select(mapRef.current)
@@ -173,12 +175,9 @@ function EuropeMap(props) {
     return (
         <div>
             <div ref={mapRef} id="map"></div>
-            <button
-                id="resetButton"
-                onClick={zoomToEurope}
-            >
-                Back to Europe
-            </button>
+            <Box display="flex" justifyContent="space-around" p={1} m={1}>
+                <Button onClick={zoomToEurope} variant="outlined"> Back to Europe </Button>
+            </Box>
         </div>
     );
 }
