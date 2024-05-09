@@ -4,6 +4,7 @@ import EuropeMap from './EuropeMap';
 import * as d3 from 'd3'; // Import the d3 library
 import playerData from "./player_data.csv";
 import RadarPlot from './radarplot';
+import Barplot from './barplot'
 
 const Dashboard = () => {
     return (
@@ -18,6 +19,9 @@ const Dashboard = () => {
                     <button>Tab 3</button>
                 </div>
                 <div className="graphContent">Graph Area</div>
+                <div>
+                    <Barplot />
+                </div>
             </div>
             <div className="parallelCoordinatesPlot">
                 {/* Radar Plot
