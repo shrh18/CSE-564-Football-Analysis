@@ -4,7 +4,7 @@ import EuropeMap from './EuropeMap';
 import * as d3 from 'd3'; // Import the d3 library
 import playerData from "./player_data.csv";
 import RadarPlot from './radarplot';
-import Barplot from './barplot'
+import Barplot from './Barplot.js'
 
 const Dashboard = () => {
     return (
@@ -13,15 +13,7 @@ const Dashboard = () => {
             {/* <div className="empty"></div> */}
             <div className="scatterPlot">Scatter Plot Matrix</div>
             <div className="graph">
-                <div className="tabs">
-                    <button>Tab 1</button>
-                    <button>Tab 2</button>
-                    <button>Tab 3</button>
-                </div>
-                <div className="graphContent">Graph Area</div>
-                <div>
-                    <Barplot />
-                </div>
+                <Barplot />
             </div>
             <div className="parallelCoordinatesPlot">
                 {/* Radar Plot

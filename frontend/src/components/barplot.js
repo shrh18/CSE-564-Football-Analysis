@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import './barplot.css'; // Assume CSS is extracted to this file
 import teamwiseData from "./teamwise_data.csv";
@@ -6,17 +6,23 @@ import dataExtraction from "./dataFeaturing.js";
 // import dataExtraction from './dataFeaturing.js';
 
 
-function barplot() {
-
+function Barplot() {
+    console.log("Func called")
     // const barRef = useRef();
 
-    // useEffect(() => {
+    const [chart,setChart] = useState("");
+
+    useEffect(() => {
+        console.log("Chart 2",chart);
+        if( chart != ""){
         var margin = {top: 30, right: 30, bottom: 70, left: 60},
-        width = 460 - margin.left - margin.right,
-        height = 400 - margin.top - margin.bottom;
+        width = 400 - margin.left - margin.right,
+        height = 300 - margin.top - margin.bottom;
 
         // append the svg object to the body of the page
-        var svg = d3.select("#my_dataviz")
+        
+        var xx = d3.select('#barplot').append("div").attr("id", "barPlotChartDiv")
+        var svg = d3.select("#barPlotChartDiv")
         .append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
@@ -86,27 +92,38 @@ function barplot() {
             .merge(u)
             .transition()
             .duration(1000)
-                .attr("x", function(leagues, i) { return x(leagues[i]); })
+                .attr("x", function(d, i) { return x(leagues[i]); })
                 .attr("y", function(d) { return y(d); })
                 .attr("width", x.bandwidth())
-                .attr("height", function(d) { return height - y(d[selectedVar]); })
+                .attr("height", function(d) { return height - y(d); })
                 .attr("fill", "#69b3a2")
         }
 
         // // Initialize plot
-        // update('var1')
+        update(chart)
+    }else{
+        updateChart("Goals");
         
-    // }, []);
+
+    }
+
+    }, [chart]);
+
+    const updateChart = ((val) =>{
+        d3.select("#barPlotChartDiv").remove();
+        setChart(val)
+    });
+    
 
     return (
         <div>
             <div id="barplot"></div>
-            <button onClick={() => update('Goals')}>Goals</button>
-            <button onClick={() => update('Fouls')}>Fouls</button>
-            <button onClick={() => update('Passes')}>Passes</button>
+            <button onClick={() => updateChart("Goals")}>Goals</button>
+            <button onClick={() => updateChart('Fouls')}>Fouls</button>
+            <button onClick={() => updateChart('Passes')}>Passes</button>
         </div>
     );
 }
-
-export default barplot;
+// barplot()
+export default Barplot;
 
