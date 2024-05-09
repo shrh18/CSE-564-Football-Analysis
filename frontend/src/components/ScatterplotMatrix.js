@@ -1,34 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import './scatterplot.css';
-import playerData from "./player_data.csv";
 import dataExtraction from './dataFeaturing';
-import Papa from 'papaparse';
-
-
 
 const ScatterPlotMatrix = (props) => {
 
     const scatterRef = useRef(null);
-    const [extract,setExtract] = useState(false);
     let country = props.CountrySelected;
     const width = 800;
     const size = 200; // Size of each mini plot
     const padding = 20; // Padding between plots
-    const colormap = ["red", "blue", "green", "yellow"];
-
-    // useEffect(() => {
-    //     // Load and parse the CSV data
-    //     Papa.parse(playerData, {
-    //         download: true,
-    //         header: true,
-    //         complete: function(results) {
-    //             const data = results.data;
-    //             console.log("data fromcsv - ", data)
-    //             drawScatterPlotMatrix(data);
-    //         }
-    //     });
-    // }, [playerData]);
+    const colormap = ["red", "blue", "green"];
 
     const [data,setData] = useState(null);
 
@@ -167,7 +149,7 @@ const ScatterPlotMatrix = (props) => {
         // })
     }
 
-    }, [extract]);
+    }, [props.CountrySelected]);
 
     
 
@@ -275,7 +257,6 @@ const ScatterPlotMatrix = (props) => {
         <div >
             <h2><u>ScatterPlot Matrix</u></h2>
             <svg ref={scatterRef}></svg>
-            <button onClick={() => setExtract(!extract)}>Passes</button>
         </div>
     );
 };

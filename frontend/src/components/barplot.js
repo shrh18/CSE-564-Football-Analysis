@@ -17,6 +17,8 @@ function Barplot(props) {
 
 
     useEffect(() => {
+        updateChart("Goals");
+        
         console.log("Chart 2",chart);
         if( chart != ""){
         var margin = {top: 30, right: 30, bottom: 70, left: 60},
@@ -167,7 +169,11 @@ function Barplot(props) {
 
     }
 
-    }, [chart]);
+    }, [chart,props.CountrySelected]);
+
+    // useEffect(()=>{
+    //     updateChart("Goals");
+    // },[props.CountrySelected])
 
     const updateChart = ((val) =>{
         d3.select("#barPlotChartDiv").remove();

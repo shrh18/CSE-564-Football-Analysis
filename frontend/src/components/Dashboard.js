@@ -10,7 +10,7 @@ const Dashboard = () => {
     const [CountrySelected, setCountrySelected] = React.useState("Europe");
     return (
         <div className="dashboard">
-            <div className="map"><EuropeMap setCountrySelected = {setCountrySelected}/></div>
+            <div className="map"><EuropeMap CountrySelected = {CountrySelected} setCountrySelected = {setCountrySelected}/></div>
             {/* <div className="empty"></div> */}
             <div className="scatterPlot">
                 <ScatterPlotMatrix CountrySelected={CountrySelected}/>
