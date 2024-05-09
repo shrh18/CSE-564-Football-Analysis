@@ -28,19 +28,18 @@ function RadarChart(id, data, options) {
     // console.log(data)
 
     var newData = [];
-    for (var i = 0; i < data.length; i++) {
+    data.forEach(function(d) {
         newData.push([
-            {axis:"Goals",value:parseFloat(data[i]["GoalsPer90s"])},
-            {axis:"Shots",value:parseFloat(data[i]["Shots"])/10},
-            {axis:"Touches",value:parseFloat(data[i]["Touches"])/100},
-            {axis:"Dribbles",value:parseFloat(data[i]["DriSucc"])/10},
-            {axis:"Aerials Won",value:parseFloat(data[i]["AerWon"])},
-            {axis:"Tackles Won",value:parseFloat(data[i]["TklWon"])},
-            {axis:"Defensive Passes",value:parseFloat(data[i]["TB"])},
-            {axis:"Assists",value:parseFloat(data[i]["AssistsPer90"])}
-            // add more key-value pairs as needed
+            {axis:"Goals",value:parseFloat(d["GoalsPer90s"])},
+            {axis:"Shots",value:parseFloat(d["Shots"]) / 10},
+            {axis:"Touches",value:parseFloat(d["Touches"]) / 100},
+            {axis:"Dribbles",value:parseFloat(d["DriSucc"]) / 10},
+            {axis:"Aerials Won",value:parseFloat(d["AerWon"])},
+            {axis:"Tackles Won",value:parseFloat(d["TklWon"])},
+            {axis:"Defensive Passes",value:parseFloat(d["TB"])},
+            {axis:"Assists",value:parseFloat(d["AssistsPer90"])},
         ]);
-    }
+    });
 
     console.log("newdata - ",newData);
     data = newData
@@ -61,23 +60,21 @@ function RadarChart(id, data, options) {
         color: d3.scaleOrdinal(d3.schemeCategory10)	//Color function
     };
     
-    //Put all of the options into a variable called cfg
-    if('undefined' !== typeof options){
-        for(var i in options){
-        if('undefined' !== typeof options[i]){ cfg[i] = options[i]; }
-        }//for i
-    }//if
+    // Merging supplied configuration options
+    if (typeof options !== 'undefined') {
+        for (var i in options) {
+            if (typeof options[i] !== 'undefined') { cfg[i] = options[i]; }
+        }
+    }
     
     //If the supplied maxValue is smaller than the actual one, replace by the max in the data
-    var maxValue = Math.max(cfg.maxValue, d3.max(data, function(i){return d3.max(i.map(function(o){return o.value;}))}));
-        
-    var allAxis = (data[0].map(function(i, j){return i.axis})),	//Names of each axis
-        total = allAxis.length,					//The number of different axes
-        radius = Math.min(cfg.w/2, cfg.h/2), 	//Radius of the outermost circle
-        Format = d3.format('%'),			 	//Percentage formatting
-        angleSlice = Math.PI * 2 / total;		//The width in radians of each "slice"
-    
-    //Scale for the radius
+    var maxValue = Math.max(cfg.maxValue, d3.max(newData, function(i) { return d3.max(i.map(function(o) { return o.value; })); }));
+
+    var allAxis = newData[0].map(function(i) { return i.axis; }),
+        total = allAxis.length,
+        radius = Math.min(cfg.w / 2, cfg.h / 2),
+        angleSlice = Math.PI * 2 / total;
+
     var rScale = d3.scaleLinear()
         .range([0, radius])
         .domain([0, maxValue]);
@@ -130,15 +127,15 @@ function RadarChart(id, data, options) {
 
     //Text indicating at what % each level is
     axisGrid.selectAll(".axisLabel")
-        .data(d3.range(1,(cfg.levels+1)).reverse())
+        .data(d3.range(1, (cfg.levels + 1)).reverse())
         .enter().append("text")
         .attr("class", "axisLabel")
         .attr("x", 4)
-        .attr("y", function(d){return -d*radius/cfg.levels;})
+        .attr("y", function(d) { return -d * radius / cfg.levels; })
         .attr("dy", "0.4em")
         .style("font-size", "10px")
         .attr("fill", "#737373")
-        .text(function(d,i) { return Format(maxValue * d/cfg.levels); });
+        .text(function(d) { return Math.round(maxValue * d / cfg.levels); }); 
 
     /////////////////////////////////////////////////////////
     //////////////////// Draw the axes //////////////////////
@@ -163,7 +160,7 @@ function RadarChart(id, data, options) {
     //Append the labels at each axis
     axis.append("text")
         .attr("class", "legend")
-        .style("font-size", "11px")
+        .style("font-size", "15px")
         .attr("text-anchor", "middle")
         .attr("dy", "0.35em")
         .attr("x", function(d, i){ return rScale(maxValue * cfg.labelFactor) * Math.cos(angleSlice*i - Math.PI/2); })
@@ -263,7 +260,7 @@ function RadarChart(id, data, options) {
             tooltip
                 .attr('x', newX)
                 .attr('y', newY)
-                .text(Format(d.value))
+                .text(d.value)
                 .transition().duration(200)
                 .style('opacity', 1);
         })
@@ -374,8 +371,9 @@ function RadarPlot() {
               label: player.Player,
               Squad: player.Squad // Assuming there's a 'Year' column in your CSV
             }));
-            setPlayers(transformedData);
-            console.log("Data from CSV - ", typeof transformedData);
+            const uniqueData = removeDuplicates(transformedData, 'label');
+            setPlayers(uniqueData);
+            console.log("Data from CSV - ", typeof uniqueData);
           }
         });
       }, [playerData]);
@@ -383,6 +381,14 @@ function RadarPlot() {
       console.log("player && ",players);
       const filteredPlayers1 = players.filter(player => player.label !== selectedPlayer2?.label);
       const filteredPlayers2 = players.filter(player => player.label !== selectedPlayer1?.label);
+
+      function removeDuplicates(array, key) {
+        return array.filter((obj, index, self) =>
+          index === self.findIndex((el) => (
+            el[key] === obj[key]
+          ))
+        );
+      }
     
 
     return (

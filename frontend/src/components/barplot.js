@@ -137,7 +137,11 @@ function Barplot(props) {
 
             // X axis
             x.domain(xAxisVar)
-            xAxis.transition().duration(1000).call(d3.axisBottom(x))
+            xAxis.transition().duration(1000).call(d3.axisBottom(x)).selectAll("text")
+                .style("text-anchor", "end")
+                .attr("dx", "-.9em")
+                .attr("dy", "-7px")
+                .attr("transform", "rotate(-90)");
 
             // Add Y axis
             y.domain([0, d3.max(yAxisVar, function(d) { return d }) ]);
