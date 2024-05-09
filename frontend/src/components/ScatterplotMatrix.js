@@ -224,10 +224,10 @@ const ScatterPlotMatrix = (props) => {
             // Plot function for each cell
             function plot(p) {
                 const cell = d3.select(this);
-
+            
                 xScale.domain(domainByTrait[p.x]);
                 yScale.domain(domainByTrait[p.y]);
-
+            
                 cell.append("rect")
                     .attr("class", "frame")
                     .attr("x", padding / 2)
@@ -235,14 +235,25 @@ const ScatterPlotMatrix = (props) => {
                     .attr("width", size - padding)
                     .attr("height", size - padding)
                     .style("fill", "lightblue");
-
-                cell.selectAll("circle")
-                    .data(data)
-                    .enter().append("circle")
-                    .attr("cx", d => xScale(d[p.x]))
-                    .attr("cy", d => yScale(d[p.y]))
-                    .attr("r", 4)
-                    .style("fill", d => colormap[columns.indexOf(p.x) % 4]);
+            
+                if (p.x !== p.y) {
+                    // If the row and column are different, plot circles
+                    cell.selectAll("circle")
+                        .data(data)
+                        .enter().append("circle")
+                        .attr("cx", d => xScale(d[p.x]))
+                        .attr("cy", d => yScale(d[p.y]))
+                        .attr("r", 4)
+                        .style("fill", d => colormap[columns.indexOf(p.x) % 4]);
+                } else {
+                    // If the row and column are the same, put the variable name in the cell
+                    cell.append("text")
+                        .attr("x", size / 2)
+                        .attr("y", size / 2)
+                        .attr("text-anchor", "middle")
+                        .attr("dominant-baseline", "middle")
+                        .text(p.x);
+                }
             }
 
             function cross(a, b) {

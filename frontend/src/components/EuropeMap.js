@@ -123,6 +123,7 @@ function EuropeMap(props) {
         
         function showcities(Country) {
             d3.csv(teamwiseData).then(function(data) {
+                g.selectAll("circle").remove();
                 g.selectAll("circle")
                     .data(data.filter(function(d) {
                         return d.Country === Country;
