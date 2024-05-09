@@ -4,13 +4,17 @@ import './barplot.css'; // Assume CSS is extracted to this file
 import teamwiseData from "./teamwise_data.csv";
 import dataExtraction from "./dataFeaturing.js";
 // import dataExtraction from './dataFeaturing.js';
+import EuropeMap from './EuropeMap.js';
 
 
-function Barplot() {
+function Barplot(props) {
     console.log("Func called")
     // const barRef = useRef();
 
     const [chart,setChart] = useState("");
+    let country =  props.CountrySelected;
+    console.log("Country Selected = ", country)
+
 
     useEffect(() => {
         console.log("Chart 2",chart);
@@ -59,31 +63,87 @@ function Barplot() {
             console.log("Extracted data - ", extractedData)
             // console.log(data)
 
-            let leagues = extractedData.leagues
-            let goals = [extractedData.sumGoalsPremierLeague, extractedData.sumGoalsLigue1, extractedData.sumGoalsBundesliga, extractedData.sumGoalsSerieA, extractedData.sumGoalsLaLiga] 
-            let fouls = [extractedData.sumFoulsPremierLeague, extractedData.sumFoulsLigue1, extractedData.sumFoulsBundesliga, extractedData.sumFoulsSerieA, extractedData.sumFoulsLaLiga]
-            let passes = [extractedData.sumPassesPremierLeague/1000, extractedData.sumPassesLigue1/1000, extractedData.sumPassesBundesliga/1000, extractedData.sumPassesSerieA/1000, extractedData.sumPassesLaLiga/1000]
-            if(selectedVar == 'Goals'){
-                data = goals
+            let xAxisVar;
+            let yAxisVar;
+
+            if(country == "Europe"){
+                let leagues = extractedData.leagues
+                let goals = [extractedData.sumGoalsPremierLeague, extractedData.sumGoalsLigue1, extractedData.sumGoalsBundesliga, extractedData.sumGoalsSerieA, extractedData.sumGoalsLaLiga] 
+                let fouls = [extractedData.sumFoulsPremierLeague, extractedData.sumFoulsLigue1, extractedData.sumFoulsBundesliga, extractedData.sumFoulsSerieA, extractedData.sumFoulsLaLiga]
+                let passes = [extractedData.sumPassesPremierLeague/1000, extractedData.sumPassesLigue1/1000, extractedData.sumPassesBundesliga/1000, extractedData.sumPassesSerieA/1000, extractedData.sumPassesLaLiga/1000]
+                if(selectedVar == 'Goals'){
+                    data = goals
+                }
+                else if(selectedVar == 'Fouls'){
+                    data = fouls
+                }
+                else if(selectedVar == 'Passes'){
+                    data = passes
+                }
+
+                xAxisVar = leagues
+                yAxisVar = data
+
             }
-            else if(selectedVar == 'Fouls'){
-                data = fouls
-            }
-            else if(selectedVar == 'Passes'){
-                data = passes
+            else{
+                
+                let league;
+                if(country == 'Germany'){
+                    league = 'Bundesliga'
+                }
+                else if(country == 'England'){
+                    league = 'Premier League'
+                }
+                else if(country == 'Spain'){
+                    league = 'La Liga'
+                }
+                else if(country == 'Italy'){
+                    league = 'Serie A'
+                }
+                else if(country == 'France'){
+                    league = 'Ligue 1'
+                }
+
+                let selectedLeagueStats = extractedData.allTeamsStats.find(obj => league in obj)[league];
+                console.log("selectedLeagueStats : ", selectedLeagueStats)
+
+                // Extract goals for each team in the selected league
+                let selectedLeagueGoals = Object.values(selectedLeagueStats).map(team => team.goals);
+                console.log("selectedLeagueGoals",selectedLeagueGoals);
+
+                let selectedLeagueAges = Object.values(selectedLeagueStats).map(team => team.avgAge);
+                let selectedLeaguePasses = Object.values(selectedLeagueStats).map(team => team.sucPass);
+                let selectedLeagueFouls = Object.values(selectedLeagueStats).map(team => team.fouls);
+
+                let selectedLeagueKeys = Object.keys(selectedLeagueStats);
+
+                if(selectedVar == 'Goals'){
+                    data = selectedLeagueGoals
+                }else if (selectedVar == "Avg Age"){
+                    data = selectedLeagueAges
+                }else if (selectedVar == "Passes"){
+                    data = selectedLeaguePasses
+                }else{
+                    data = selectedLeagueFouls
+                }
+
+                xAxisVar = selectedLeagueKeys
+                yAxisVar = data
+
             }
 
+
             // X axis
-            x.domain(leagues)
+            x.domain(xAxisVar)
             xAxis.transition().duration(1000).call(d3.axisBottom(x))
 
             // Add Y axis
-            y.domain([0, d3.max(data, function(d) { return d }) ]);
+            y.domain([0, d3.max(yAxisVar, function(d) { return d }) ]);
             yAxis.transition().duration(1000).call(d3.axisLeft(y));
 
             // variable u: map data to existing bars
             var u = svg.selectAll("rect")
-            .data(data)
+            .data(yAxisVar)
 
             // update bars
             u
@@ -92,7 +152,7 @@ function Barplot() {
             .merge(u)
             .transition()
             .duration(1000)
-                .attr("x", function(d, i) { return x(leagues[i]); })
+                .attr("x", function(d, i) { return x(xAxisVar[i]); })
                 .attr("y", function(d) { return y(d); })
                 .attr("width", x.bandwidth())
                 .attr("height", function(d) { return height - y(d); })
@@ -118,6 +178,7 @@ function Barplot() {
     return (
         <div>
             <div id="barplot"></div>
+            <p>Country Selected: {country}</p>
             <button onClick={() => updateChart("Goals")}>Goals</button>
             <button onClick={() => updateChart('Fouls')}>Fouls</button>
             <button onClick={() => updateChart('Passes')}>Passes</button>

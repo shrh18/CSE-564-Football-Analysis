@@ -4,12 +4,15 @@ import './EuropeMap.css'; // Assume CSS is extracted to this file
 import geojson from "./europe.geojson";
 import teamwiseData from "./teamwise_data.csv"
 
-function EuropeMap() {
+let CountrySelected = null
+
+function EuropeMap(props) {
     const mapRef = useRef(); // Reference for the main map container
     const gRef = useRef(); // Reference for the SVG group element
 
     const tooltipCountryRef = useRef(null);
     const tooltipLeagueRef = useRef(null);
+
 
     useEffect(() => {
         const width = 300;
@@ -113,6 +116,9 @@ function EuropeMap() {
                 .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
             console.log(d.properties.name.toUpperCase())
             showcities(d.properties.name.toUpperCase());
+            CountrySelected = d.properties.name
+            props.setCountrySelected(CountrySelected);
+
         }
         
         function showcities(Country) {
@@ -145,6 +151,8 @@ function EuropeMap() {
                         tooltipLeague.style("visibility", "hidden");
                     });
             });
+
+            
         
         }
         
@@ -160,6 +168,7 @@ function EuropeMap() {
 
             gRef.current.selectAll("circle").remove(); // Remove all circles
         }
+        props.setCountrySelected("Europe");
     };
 
     return (

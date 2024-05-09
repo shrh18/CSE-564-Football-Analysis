@@ -7,15 +7,16 @@ import ScatterPlotMatrix from './ScatterplotMatrix';
 import Barplot from './Barplot.js';
 
 const Dashboard = () => {
+    const [CountrySelected, setCountrySelected] = React.useState("Europe");
     return (
         <div className="dashboard">
-            <div className="map"><EuropeMap /></div>
+            <div className="map"><EuropeMap setCountrySelected = {setCountrySelected}/></div>
             {/* <div className="empty"></div> */}
-            <div className="scatterPlot">Scatter Plot Matrix
-                 <ScatterPlotMatrix />
+            <div className="scatterPlot">
+                <ScatterPlotMatrix />
             </div>
             <div className="graph">
-                <Barplot />
+                <Barplot CountrySelected={CountrySelected}/>
             </div>
             <div className="parallelCoordinatesPlot">
                 {/* Radar Plot

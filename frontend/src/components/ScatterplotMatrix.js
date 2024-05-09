@@ -7,9 +7,9 @@ import Papa from 'papaparse';
 const ScatterPlotMatrix = () => {
 
     const scatterRef = useRef(null);
-    const width = 1000;
+    const width = 800;
     const size = 200; // Size of each mini plot
-    const padding = 30; // Padding between plots
+    const padding = 20; // Padding between plots
     const colormap = ["red", "blue", "green", "yellow"];
 
     useEffect(() => {
