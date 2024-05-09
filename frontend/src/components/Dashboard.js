@@ -5,6 +5,7 @@ import * as d3 from 'd3'; // Import the d3 library
 import RadarPlot from './radarplot';
 import ScatterPlotMatrix from './ScatterplotMatrix';
 import Barplot from './Barplot.js';
+import PCP from './PCP.js';
 
 const Dashboard = () => {
     const [CountrySelected, setCountrySelected] = React.useState("Europe");
@@ -29,8 +30,7 @@ const Dashboard = () => {
                 />
             </div>
             <div className="parallelCoordinatesPlot">
-                {/* Radar Plot
-                <div className="legend">Legend</div> */}
+                {/* <PCP /> */}
             </div>
             <div className="radarPlot"><RadarPlot /></div>
         </div>

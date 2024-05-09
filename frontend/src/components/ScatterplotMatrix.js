@@ -165,6 +165,8 @@ const ScatterPlotMatrix = (props) => {
             console.log("data is not null - ", data)
             const columns = ["goals", "fouls", "passes"]; // Example columns
             const domainByTrait = {};
+            const width = size * columns.length + padding;
+            const height = size * columns.length + padding;
 
             columns.forEach(function(trait) {
                 domainByTrait[trait] = d3.extent(data, function(d) { return +d[trait]; });
@@ -180,79 +182,65 @@ const ScatterPlotMatrix = (props) => {
                 .attr('transform', 'translate(' + padding + ',' + padding / 2 + ')');
 
             const xScale = d3.scaleLinear()
-                .range([padding / 2, size - padding / 2]);
+                .range([padding / .5, size - padding / 0.5]);
 
             const yScale = d3.scaleLinear()
-                .range([size - padding / 2, padding / 2]);
+                .range([size - padding / .5, padding / .5]);
 
-            const xAxis = d3.axisBottom(xScale).ticks(6);
-            const yAxis = d3.axisLeft(yScale).ticks(6);
+            const xAxis = d3.axisBottom(xScale).ticks(10);
+            const yAxis = d3.axisLeft(yScale).ticks(10);
 
-            svg.selectAll(".x.axis")
-                .data(columns)
-                .enter().append("g")
-                .attr("class", "x axis")
-                .attr("transform", (d, i) => `translate(${i * size},0)`)
-                .each(function(d) { xScale.domain(domainByTrait[d]); d3.select(this).call(xAxis); });
+            columns.forEach((xTrait, i) => {
+                columns.forEach((yTrait, j) => {
+                    const cell = svg.append("g")
+                        .attr("class", "cell")
+                        .attr("transform", `translate(${i * size}, ${j * size})`);
+    
+                    xScale.domain(domainByTrait[xTrait]);
+                    yScale.domain(domainByTrait[yTrait]);
 
-            svg.selectAll(".y.axis")
-                .data(columns)
-                .enter().append("g")
-                .attr("class", "y axis")
-                .attr("transform", (d, i) => `translate(0,${i * size})`)
-                .each(function(d) { yScale.domain(domainByTrait[d]); d3.select(this).call(yAxis); });
-
-            const cell = svg.selectAll(".cell")
-                .data(cross(columns, columns))
-                .enter().append("g")
-                .attr("class", "cell")
-                .attr("transform", d => `translate(${columns.indexOf(d.x) * size},${columns.indexOf(d.y) * size})`)
-                .each(plot);
-
-            // Plot function for each cell
-            function plot(p) {
-                const cell = d3.select(this);
-            
-                xScale.domain(domainByTrait[p.x]);
-                yScale.domain(domainByTrait[p.y]);
-            
-                cell.append("rect")
+                    cell.append("rect")
                     .attr("class", "frame")
                     .attr("x", padding / 2)
                     .attr("y", padding / 2)
                     .attr("width", size - padding)
                     .attr("height", size - padding)
                     .style("fill", "lightblue");
-            
-                if (p.x !== p.y) {
-                    // If the row and column are different, plot circles
-                    cell.selectAll("circle")
-                        .data(data)
-                        .enter().append("circle")
-                        .attr("cx", d => xScale(d[p.x]))
-                        .attr("cy", d => yScale(d[p.y]))
-                        .attr("r", 4)
-                        .style("fill", d => colormap[columns.indexOf(p.x) % 4]);
-                } else {
-                    // If the row and column are the same, put the variable name in the cell
-                    cell.append("text")
-                        .attr("x", size / 2)
-                        .attr("y", size / 2)
-                        .attr("text-anchor", "middle")
-                        .attr("dominant-baseline", "middle")
-                        .text(p.x);
-                }
-            }
-
-            function cross(a, b) {
-                const c = [];
-                for (let i = 0; i < a.length; i++) {
-                    for (let j = 0; j < b.length; j++) {
-                        c.push({ x: a[i], y: b[j] });
+    
+                    if (i === j) {
+                        cell.append("text")
+                            .attr("x", size / 2)
+                            .attr("y", size / 2)
+                            .attr("text-anchor", "middle")
+                            .attr("dominant-baseline", "middle")
+                            .text(xTrait);
+                    } else {
+                        // Plot the data points
+                        cell.selectAll("circle")
+                            .data(data)
+                            .enter().append("circle")
+                            .attr("cx", d => xScale(+d[xTrait]))
+                            .attr("cy", d => yScale(+d[yTrait]))
+                            .attr("r", 4)
+                            .style("fill", d => colormap[columns.indexOf(xTrait) % 4]);
                     }
-                }
-                return c;
-            }
+    
+                    // Add x-axis to the bottom of each row
+                    if (j === columns.length - 1) {
+                        cell.append("g")
+                            .attr("class", "axis x-axis")
+                            .attr("transform", `translate(0, ${size - padding / 2})`)
+                            .call(xAxis);
+                    }
+    
+                    // Add y-axis to the left of each column
+                    if (i === 0) {
+                        cell.append("g")
+                            .attr("class", "axis y-axis")
+                            .call(yAxis);
+                    }
+                });
+            });
         }
         
     };
