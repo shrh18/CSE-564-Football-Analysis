@@ -13,7 +13,7 @@ const Dashboard = () => {
             <div className="map"><EuropeMap setCountrySelected = {setCountrySelected}/></div>
             {/* <div className="empty"></div> */}
             <div className="scatterPlot">
-                <ScatterPlotMatrix />
+                <ScatterPlotMatrix CountrySelected={CountrySelected}/>
             </div>
             <div className="graph">
                 <Barplot CountrySelected={CountrySelected}/>
