@@ -8,7 +8,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 // import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
 import Box from '@mui/material/Box';
-import { Button } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 
 
 
@@ -394,15 +394,38 @@ function RadarPlot() {
     return (
         <div>
             <div className="radarPlot">
-                Radar Plot
+                <Typography variant="h4" gutterBottom component="div" sx={{ textAlign: 'center', marginY: 2 }}>
+                    Radar Plot
+                 </Typography>
+                
                 <Box display="flex" justifyContent="space-around" p={1} m={1}>
                 <Autocomplete
                     disablePortal
                     id="combo-box-demo"
                     options={filteredPlayers1}
                     getOptionLabel={(option) => option.label}
-                    sx={{ width: 200 }}
-                    renderInput={(params) => <TextField {...params} label="Choose 1st player" />}
+                    sx={{ width: 200,
+                    '& .MuiAutocomplete-input': {
+                        color: '#EDC952' // Set the background color here
+                    },
+                    '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                        borderColor: '#EDC952', // Set your color here
+                    },
+                    '&:hover fieldset': {
+                        borderColor: '#EDC952', // Color when hovering
+                    },
+                    '&.Mui-focused fieldset': {
+                        borderColor: '#EDC952', // Color when focused
+                    }
+                    },
+                    '& label': {
+                        color: '#EDC952', // Change to your desired color
+                    },
+                    '& label.Mui-focused': {
+                        color: '#EDC952', // Color of the label on focus
+                    }}}
+                    renderInput={(params) => <TextField {...params} label="Player 1" />}
                     value={selectedPlayer1}
                     onChange={(event, newValue) => {
                     setSelectedPlayer1(newValue);
@@ -414,8 +437,28 @@ function RadarPlot() {
                     id="combo-box-demo"
                     options={filteredPlayers2}
                     getOptionLabel={(option) => option.label}
-                    sx={{ width: 200 }}
-                    renderInput={(params) => <TextField {...params} label="Choose 2nd player" />}
+                    sx={{ width: 200,
+                    '& .MuiAutocomplete-input': {
+                        color: '#CE4B56' // Set the background color here
+                    },
+                    '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                        borderColor: '#CE4B56', // Set your color here
+                    },
+                    '&:hover fieldset': {
+                        borderColor: '#CE4B56', // Color when hovering
+                    },
+                    '&.Mui-focused fieldset': {
+                        borderColor: '#CE4B56', // Color when focused
+                    }
+                    },
+                    '& label': {
+                        color: '#CE4B56', // Change to your desired color
+                    },
+                    '& label.Mui-focused': {
+                        color: '#CE4B56', // Color of the label on focus
+                    }}}
+                    renderInput={(params) => <TextField {...params} label="Player 2" />}
                     value={selectedPlayer2}
                     onChange={(event, newValue) => {
                     setSelectedPlayer2(newValue);
@@ -424,7 +467,12 @@ function RadarPlot() {
                     </Box>
                 <div>
                     <div>
-                        <Button onClick={comparePlayer} variant="outlined">Compare Players</Button>
+                        <Button 
+                            onClick={comparePlayer} 
+                            variant="outlined"
+                            disabled={selectedPlayer2 === null || selectedPlayer1 === null}
+                            >Compare Players
+                        </Button>
                     </div>
 
                     <div className='radarChart'></div>

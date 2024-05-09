@@ -3,9 +3,9 @@
     grid-template-columns: 2fr 3fr 3fr;
     grid-template-rows: 1fr 1fr 1fr;
     grid-template-areas:
+        "parallelCoordinatesPlot parallelCoordinatesPlot radarPlot"
         "map scatterPlot radarPlot"
-        "graph scatterPlot radarPlot"
-        "parallelCoordinatesPlot parallelCoordinatesPlot radarPlot";
+        "graph scatterPlot radarPlot";
     height: 100vh; /* Adjust height as needed */
     grid-gap: 10px; /* Space between grid cells */
 }
@@ -18,7 +18,7 @@
 .parallelCoordinatesPlot {
     /* grid-area: empty; */
     grid-area: parallelCoordinatesPlot;
-    background-color: #f0e0d0;
+    /* background-color: #f0e0d0; */
     /* intentionally left blank */
 }
 
@@ -29,7 +29,7 @@
 
 .graph {
     grid-area: graph;
-    background-color: #f0e0d0; /* Just for visibility */
+    background-color: #d0dff0; /* Just for visibility */
     display: flex;
     flex-direction: column;
 }
@@ -44,7 +44,7 @@
 
 .radarPlot {
     grid-area: radarPlot;
-    background-color: #d5e8f3; /* Just for visibility */
+    background-color: whitesmoke; /* Just for visibility */
     position: relative;
     padding: 10px;
 }

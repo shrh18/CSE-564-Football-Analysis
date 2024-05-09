@@ -5,6 +5,7 @@ import teamwiseData from "./teamwise_data.csv";
 import dataExtraction from "./dataFeaturing.js";
 // import dataExtraction from './dataFeaturing.js';
 import EuropeMap from './EuropeMap.js';
+import { Button, Box } from '@mui/material';
 
 
 function Barplot(props) {
@@ -190,9 +191,11 @@ function Barplot(props) {
         <div>
             <div id="barplot"></div>
             <p>Country Selected: {country}</p>
-            <button onClick={() => updateChart("Goals")}>Goals</button>
-            <button onClick={() => updateChart('Fouls')}>Fouls</button>
-            <button onClick={() => updateChart('Passes')}>Passes</button>
+            <Box display="flex" justifyContent="space-around" p={1} m={1}>
+                <Button onClick={() => updateChart("Goals")} variant="outlined"> Goals </Button>
+                <Button onClick={() => updateChart("Fouls")} variant="outlined"> Fouls </Button>
+                <Button onClick={() => updateChart("Fouls")} variant="outlined"> Passes </Button>
+            </Box>
         </div>
     );
 }
