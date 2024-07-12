@@ -22,8 +22,8 @@ function Barplot(props) {
         
         console.log("Chart 2",chart);
         if( chart != ""){
-        var margin = {top: 30, right: 30, bottom: 70, left: 60},
-        width = 400 - margin.left - margin.right,
+        var margin = {top: 30, right: 30, bottom: 70, left: 30},
+        width = 450 - margin.left - margin.right,
         height = 300 - margin.top - margin.bottom;
 
         // append the svg object to the body of the page
