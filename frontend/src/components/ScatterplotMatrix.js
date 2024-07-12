@@ -37,10 +37,10 @@ const ScatterPlotMatrix = (props) => {
                 .attr('transform', 'translate(' + padding + ',' + padding / 2 + ')');
     
             const xScale = d3.scaleLinear()
-                .range([padding / .5, size - padding / 0.5]);
+                .range([padding /0.9, size - padding/0.9 ]);
     
             const yScale = d3.scaleLinear()
-                .range([size - padding / .5, padding / .5]);
+                .range([size - padding / .9, padding / .9]);
     
             const xAxis = d3.axisBottom(xScale).ticks(10);
             const yAxis = d3.axisLeft(yScale).ticks(10);
