@@ -35,12 +35,12 @@ function EuropeMap(props) {
         svg.append("clipPath")
             .attr("id", "map-clip")
             .append("rect")
-            .attr("width", width)
+            .attr("width", width) 
             .attr("height", height);
 
         const projection = d3.geoMercator()
             .center([3, 49]) // Adjust as necessary to focus on Western Europe
-            .scale(450)
+            .scale(450) 
             .translate([width / 2, height / 2]);
 
         const path = d3.geoPath().projection(projection);
